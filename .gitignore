@@ -12,3 +12,6 @@ data/*
 
 # Python
 *.pyc
+
+# Apple stuff
+.DS_Store
