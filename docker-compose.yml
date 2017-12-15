@@ -1,7 +1,7 @@
 version: '2'
 services:
     webserver:
-        image: fokkodriesprong/docker-airflow-extended-local
+        image: fokkodriesprong/docker-airflow-extended
         restart: always
         depends_on:
             - postgres
@@ -17,7 +17,7 @@ services:
         command: webserver
 
     flower:
-        image: fokkodriesprong/docker-airflow-extended-local
+        image: fokkodriesprong/docker-airflow-extended
         restart: always
         depends_on:
             - redis
@@ -28,7 +28,7 @@ services:
         command: flower
 
     scheduler:
-        image: fokkodriesprong/docker-airflow-extended-local
+        image: fokkodriesprong/docker-airflow-extended
         restart: always
         depends_on:
             - webserver
@@ -41,7 +41,7 @@ services:
         command: scheduler
 
     worker:
-        image: fokkodriesprong/docker-airflow-extended-local
+        image: fokkodriesprong/docker-airflow-extended
         restart: always
         depends_on:
             - scheduler
