@@ -1,0 +1,14 @@
+# IDEA stuff
+.idea
+*.iml
+
+# Spark stuff
+spark-warehouse
+derby.log
+metastore_db
+
+# Data
+data/*
+
+# Python
+*.pyc

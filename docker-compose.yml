@@ -1,0 +1,66 @@
+version: '2'
+services:
+    webserver:
+        image: fokkodriesprong/docker-airflow-extended-local
+        restart: always
+        depends_on:
+            - postgres
+            - redis
+        environment:
+            - LOAD_EX=n
+            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+            - EXECUTOR=Celery
+        volumes:
+            - ./dags:/usr/local/airflow/dags
+        ports:
+            - "18080:8080"
+        command: webserver
+
+    flower:
+        image: fokkodriesprong/docker-airflow-extended-local
+        restart: always
+        depends_on:
+            - redis
+        environment:
+            - EXECUTOR=Celery
+        ports:
+            - "5555:5555"
+        command: flower
+
+    scheduler:
+        image: fokkodriesprong/docker-airflow-extended-local
+        restart: always
+        depends_on:
+            - webserver
+        volumes:
+            - ./dags:/usr/local/airflow/dags
+        environment:
+            - LOAD_EX=n
+            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+            - EXECUTOR=Celery
+        command: scheduler
+
+    worker:
+        image: fokkodriesprong/docker-airflow-extended-local
+        restart: always
+        depends_on:
+            - scheduler
+        volumes:
+            - ./dags:/usr/local/airflow/dags
+            - ./data:/data
+        environment:
+            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+            - EXECUTOR=Celery
+        command: worker
+
+    redis:
+        image: 'redis:3.2.7'
+
+    postgres:
+        image: postgres:9.6
+        environment:
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+        volumes:
+            - ./data:/data
